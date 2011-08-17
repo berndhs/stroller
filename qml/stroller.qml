@@ -138,6 +138,7 @@ Rectangle {
 
   Component.onCompleted: {
     orientationWatcher.start()
+    //geoDataSource.setInterval (3000, false)
     console.log (" loaded, width " + mainWidth + " height "+ mainHeight)
     console.log (" color " + mainBox.color)
   }

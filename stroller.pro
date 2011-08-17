@@ -7,6 +7,11 @@ MOBILITY += location
 MOBILITY += sensors
 MOBILITY += systeminfo
 
+OBJECTS_DIR = tmp/obj
+MOD_DIR = tmp/moc
+RCC_DIR = tmp/rcc
+
+
 TARGET = stroller
 
 INCLUDEPATH += ./include

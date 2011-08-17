@@ -4,6 +4,11 @@
 #include <QGeoPositionInfoSource>
 #include <QGeoPositionInfo>
 #include <QGeoBoundingBox>
+#include <QGeoCoordinate>
+#include <QFile>
+#include <QTextStream>
+#include <QTime>
+#include <QTimer>
 
 QTM_USE_NAMESPACE
 
@@ -36,9 +41,16 @@ signals:
 
 private:
 
+  void processPosition (const QGeoPositionInfo & position);
+
+  QTime                    clock;
+  QTimer                  *nodataTimer;
   int                      tickInterval;
   QGeoPositionInfoSource  *source;
+  bool                     isFirstPosition;
   QGeoBoundingBox          boundingBox;
+  QGeoPositionInfo         lastReport;
+  QList <QGeoCoordinate>   path;
 
 };
 
