@@ -37,6 +37,15 @@ GeoTicker::start ()
 }
 
 void
+GeoTicker::stop ()
+{
+  qDebug () << __PRETTY_FUNCTION__;
+  if (source) {
+    source->stopUpdates ();
+  }
+}
+
+void
 GeoTicker::setInterval (int msecs, bool doStart)
 {
   qDebug () << __PRETTY_FUNCTION__;
@@ -63,10 +72,11 @@ GeoTicker::receivePosition (const QGeoPositionInfo & position)
   QGeoCoordinate coord = position.coordinate();
   qreal vH = position.attribute (QGeoPositionInfo::GroundSpeed);
   qreal vV = position.attribute (QGeoPositionInfo::VerticalSpeed);
+  qreal heading = position.attribute (QGeoPositionInfo::Direction);
   qreal lat = coord.latitude ();
   qreal lon = coord.longitude ();
   qreal alt = coord.altitude ();
-  emit positionUpdate (lat, lon, alt, vH, vV);
+  emit positionUpdate (lat, lon, alt, vH, heading, vV);
 }
 
 void

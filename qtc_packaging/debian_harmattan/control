@@ -12,3 +12,4 @@ Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: <insert up to 60 chars description>
  <insert long description, indented with spaces>
 XSBC-Maemo-Display-Name: stroller
+XB-Maemo-Icon-26: iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAQ1JREFUaIHtmEEOwjAMBBdU0X/wMW68hFdy6FfCpUERtDSN13aDPFIPvcS78TpRCwR/zgSk+Xk8gZG9/pm94A9uA3BnL6pqYAJS8Tom4MKucWIvWPJh4M2VWNcyQiqoGVjbfTYqEaoRz4oRvQNWO59xmwGWUdchZpiIU6jEOv8A8RSSiJecSBGhGfPoZKQRYgvfrUdiQGvXd2lqMWAVlypttQbcMj6zqrPGgLf4zKLWLQNHEZ/50tv9PTB4C6ik2xnY1He0e8D0IithmGnS0v0QMz/qW7sg0tB9B5gGVP/yWRbdEyVx/YiQAEr3tXK7FaPD/502G+juZ0B7p5aiRK3ZfQesDbhcdkEQBMEqLwnyJ0PgFytDAAAAAElFTkSuQmCC

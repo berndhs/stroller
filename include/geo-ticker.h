@@ -3,6 +3,7 @@
 
 #include <QGeoPositionInfoSource>
 #include <QGeoPositionInfo>
+#include <QGeoBoundingBox>
 
 QTM_USE_NAMESPACE
 
@@ -17,6 +18,7 @@ public:
   GeoTicker (QObject *parent=0);
 
   Q_INVOKABLE void start ();
+  Q_INVOKABLE void stop ();
   Q_INVOKABLE void setInterval (int msecs, bool start=false);
   Q_PROPERTY(int interval READ interval)
 
@@ -30,12 +32,13 @@ private slots:
 signals:
 
   void positionUpdate (qreal posLat, qreal posLon, qreal posAlt,
-                       qreal velHorizontal, qreal velVertical);
+                       qreal velHorizontal, qreal heading, qreal velVertical);
 
 private:
 
   int                      tickInterval;
   QGeoPositionInfoSource  *source;
+  QGeoBoundingBox          boundingBox;
 
 };
 
