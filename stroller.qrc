@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/qml">
+        <file>icons/icon.png</file>
+    </qresource>
+    <qresource prefix="/">
+      <file alias="stroller.qml">qml/stroller.qml</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,12 @@
+
+[Desktop Entry]
+Name=Stroller Location Tracker
+GenericName=Location Tracker
+Comment=Track Location by Geographic Coordinates
+Exec=stroller
+Icon=stroller
+StartupNotify=false
+Terminal=false
+Type=Application
+Categories=Office;Productivity;
+X-Desktop-File-Install-Version=0.16
