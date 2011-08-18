@@ -1,0 +1,7 @@
+stroller
+
+A small GPS tracker for things like phones. Displays current location,
+ground speed, altitude etc, along with a track of where the device has
+been since the app started running.
+
+Should work whenever a GPS device is present and usable by Qt Mobility.

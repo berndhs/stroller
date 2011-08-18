@@ -21,6 +21,10 @@ Rectangle {
       currentDisplay.heading = heading
       currentDisplay.climbRate = velVertical
     }
+    onMapUpdate: {
+      mapImage.source = fileName
+      console.log ("XXXXXXXXXXXXXX new map " + mapImage.source)
+    }
   }
   GeuzenOrientation {
     id: orientationWatcher
@@ -134,11 +138,18 @@ Rectangle {
     width: mainWidth
     height:mainHeight - currentDisplay.height - buttonBox.height
     color:"blue"
+    Image {
+      id:mapImage
+      width: parent.width - 2
+      height: parent.height - 2
+      anchors.centerIn:parent
+      source: ""
+    }
   }
 
   Component.onCompleted: {
     orientationWatcher.start()
-    //geoDataSource.setInterval (3000, false)
+    geoDataSource.setInterval (3000, true)
     console.log (" loaded, width " + mainWidth + " height "+ mainHeight)
     console.log (" color " + mainBox.color)
   }

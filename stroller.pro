@@ -8,9 +8,10 @@ MOBILITY += sensors
 MOBILITY += systeminfo
 
 OBJECTS_DIR = tmp/obj
-MOD_DIR = tmp/moc
+MOC_DIR = tmp/moc
 RCC_DIR = tmp/rcc
 
+QMAKE_CXXFLAGS += -std=c++0x
 
 TARGET = stroller
 
