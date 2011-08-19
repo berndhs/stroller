@@ -249,18 +249,18 @@ GeoTicker::writeSvgMap (QIODevice * device,
   qreal maxLon = topRight.longitude();
 
   rangeLat = maxLat - minLat;
-  rangeLon = maxLon - minLon, rangeLon;
+  rangeLon = maxLon - minLon;
   if (rangeLat > rangeLon) {
     rangeLon = rangeLat;
   } else {
     rangeLat = rangeLon;
   }
-  qreal boxHeight = botLeft.distanceTo (QGeoCoordinate (
-                                          topRight.latitude(),
-                                          minLon));  
   latScale = 1.0;
   lonScale = 1.0;
   #if 0
+  qreal boxHeight = botLeft.distanceTo (QGeoCoordinate (
+                                          topRight.latitude(),
+                                          minLon));  
   qreal boxWidth (0);
   if (minLat > 0.0) {
     // all points in northern hemisphere - widest at bottom
@@ -299,14 +299,48 @@ GeoTicker::writeSvgMap (QIODevice * device,
   qreal dist (0.0);
   if (!path.isEmpty()) {
     QString pathString;
+    QGeoCoordinate startPoint = mapPath.first();
+    QGeoCoordinate endPoint = mapPath.last();
+    QString startMark = QString (
+      "<polygon \n"
+      "  style=\"fill:none; stroke:yellow; stroke-width:3\" "
+      "  points=\" %1,%2 %3,%4 %5,%6, %7,%8 \""
+      "/>\n")
+       .arg (mappedLon(startPoint.longitude())-5)
+         .arg (mappedLat(startPoint.latitude())-5)
+       .arg (mappedLon(startPoint.longitude())-5)
+         .arg (mappedLat(startPoint.latitude())+5)
+       .arg (mappedLon(startPoint.longitude())+5)
+         .arg (mappedLat(startPoint.latitude())+5)
+       .arg (mappedLon(startPoint.longitude())+5) 
+         .arg (mappedLat(startPoint.latitude())-5);
+         
+    QString endMark = QString (
+      "<polygon \n"
+      "  style=\"fill:none; stroke:#7777ff; stroke-width:3\" "
+      " points=\" %1,%2 %3,%4, %5,%6 \""
+      "/>\n")
+        .arg (mappedLon(endPoint.longitude())-5)
+          .arg (mappedLat(endPoint.latitude())+5)
+        .arg (mappedLon(endPoint.longitude())+5)
+          .arg (mappedLat(endPoint.latitude())+5)
+        .arg (mappedLon(endPoint.longitude()))
+          .arg (mappedLat(endPoint.latitude())-8);
+    
+    device->write (startMark.toAscii());
+    device->write (endMark.toAscii());
+     
+    qDebug () << " start at " << startPoint << startMark;
+    qDebug () << "  end  at " << endPoint << endMark;
     for (int i=0; i<path.count(); i++) {
       if (i > 1) {
         dist += mapPath.at(i).distanceTo (mapPath.at(i-1));
       }
-      qDebug () << " path element " << i << mapPath.at(i) << " dist " << dist;
-      pathString += QString (" %1,%2 ")
+      QString element = QString (" %1,%2 ")
                    .arg (mappedLon (mapPath.at(i).longitude()))
                    .arg (mappedLat (mapPath.at(i).latitude()));
+      pathString += element;
+      qDebug () << " path element " << i << mapPath.at(i) << element << " dist " << dist;
     }
     device->write (QString (
       "<polyline \n"
