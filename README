@@ -5,3 +5,18 @@ ground speed, altitude etc, along with a track of where the device has
 been since the app started running.
 
 Should work whenever a GPS device is present and usable by Qt Mobility.
+
+This is a Qt/QML program, hence you build it thus:
+
+  qmake stroller.pro   # or qmake-qt stroller.pro
+  make
+
+it is safe to build with QtCreator. You want cmake? Go ahead, do it yourself.
+
+There is a completely unrealistic way of making test data in the
+progral spiral.c, which can be compiled by using
+
+gcc spiral.c -lm -o spiral
+
+the only advantage of the spiral data is that they excercise the 
+map drawing and scaling code.
