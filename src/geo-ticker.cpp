@@ -29,11 +29,6 @@ GeoTicker::GeoTicker (QObject *parent)
   clock.start ();
   qDebug () << "sources " << QGeoPositionInfoSource::availableSources();
   source = QGeoPositionInfoSource::createDefaultSource(this);
-  if (!source) {
-    source = new GeoTestSource (this);
-    tickInterval = 1000; // testing, don't make them wait so long
-    mapUpdateInterval = 2000;
-  }
   qDebug () << " source created " << source;
   if (source) {
     bool ok (true);
@@ -65,13 +60,25 @@ GeoTicker::haveDataSource ()
 void
 GeoTicker::useTestSource (bool useTest)
 {
+  qDebug () << __PRETTY_FUNCTION__ << useTest;
   if (source) {
+    disconnect (source, 0,0,0);
     delete source;
   }
   if (useTest) {
     source = new GeoTestSource (this);
+    tickInterval = 500; // testing, don't make them wait so long
+    mapUpdateInterval = 1000;
   } else {
     source = QGeoPositionInfoSource::createDefaultSource(this);
+  }
+  if (source) {
+    connect (source, SIGNAL (positionUpdated (const QGeoPositionInfo &)),
+             this, SLOT (receivePosition(const QGeoPositionInfo &)));
+    connect (source, SIGNAL (updateTimeout()),
+             this, SLOT (noUpdate()));
+    source->setUpdateInterval (tickInterval);
+    start ();
   }
 }
 

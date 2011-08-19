@@ -149,11 +149,12 @@ Rectangle {
 
   Component.onCompleted: {
     orientationWatcher.start()
-    if (!geoDataSource.haveDataSource()) {
-      getDataSource.useTestSource()
+    if (isTesting) {
+      geoDataSource.useTestSource()
     }
     geoDataSource.setInterval (3000, true)
     console.log (" loaded, width " + mainWidth + " height "+ mainHeight)
     console.log (" color " + mainBox.color)
+    console.log (" isTesting " + isTesting)
   }
 }
