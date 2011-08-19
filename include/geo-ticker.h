@@ -27,6 +27,9 @@ public:
   Q_INVOKABLE void start ();
   Q_INVOKABLE void stop ();
   Q_INVOKABLE void setInterval (int msecs, bool start=false);
+  Q_INVOKABLE void setWidthHeight (qreal width, qreal height);
+  Q_INVOKABLE bool haveDataSource ();
+  Q_INVOKABLE void useTestSource (bool useTest=true);
   Q_PROPERTY(int interval READ interval)
   Q_PROPERTY(int mapInterval READ mapInterval WRITE setMapInterval)
 
@@ -72,8 +75,12 @@ private:
 
   qreal   minLat;
   qreal   rangeLat;
+  qreal   latScale;
   qreal   minLon;
   qreal   rangeLon;
+  qreal   lonScale;
+  qreal   mapWidth;
+  qreal   mapHeight;
 
 };
 

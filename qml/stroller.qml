@@ -143,12 +143,15 @@ Rectangle {
       width: parent.width - 2
       height: parent.height - 2
       anchors.centerIn:parent
-      source: ""
+      source: "/icons/icon.png"
     }
   }
 
   Component.onCompleted: {
     orientationWatcher.start()
+    if (!geoDataSource.haveDataSource()) {
+      getDataSource.useTestSource()
+    }
     geoDataSource.setInterval (3000, true)
     console.log (" loaded, width " + mainWidth + " height "+ mainHeight)
     console.log (" color " + mainBox.color)

@@ -1,4 +1,5 @@
 #include "geo-ticker.h"
+#include "geo-test-source.h"
 #include <QDebug>
 #include <QStringList>
 #include <QDateTime>
@@ -20,12 +21,19 @@ GeoTicker::GeoTicker (QObject *parent)
    source (0),
    isFirstPosition (true),
    boundingBox (QGeoCoordinate (0,0,0),359.9999,179.9999),
-   currentMapFile (0)
+   currentMapFile (0),
+   mapWidth (100.0),
+   mapHeight (100.0)
 {
   qDebug () << __PRETTY_FUNCTION__;
   clock.start ();
   qDebug () << "sources " << QGeoPositionInfoSource::availableSources();
   source = QGeoPositionInfoSource::createDefaultSource(this);
+  if (!source) {
+    source = new GeoTestSource (this);
+    tickInterval = 1000; // testing, don't make them wait so long
+    mapUpdateInterval = 2000;
+  }
   qDebug () << " source created " << source;
   if (source) {
     bool ok (true);
@@ -46,6 +54,25 @@ GeoTicker::GeoTicker (QObject *parent)
   mapTimer = new QTimer (this);
   connect (mapTimer, SIGNAL (timeout()), this, SLOT (updateMap()));
   mapTimer->start (mapUpdateInterval);
+}
+
+bool
+GeoTicker::haveDataSource ()
+{
+  return source != 0;
+}
+
+void
+GeoTicker::useTestSource (bool useTest)
+{
+  if (source) {
+    delete source;
+  }
+  if (useTest) {
+    source = new GeoTestSource (this);
+  } else {
+    source = QGeoPositionInfoSource::createDefaultSource(this);
+  }
 }
 
 void
@@ -106,6 +133,13 @@ GeoTicker::mapInterval ()
 }
 
 void
+GeoTicker::setWidthHeight (qreal width, qreal height)
+{
+  mapWidth = width > 1.0 ? width : 1.0;
+  mapHeight = height > 1.0 ? height : 1.0;
+}
+
+void
 GeoTicker::receivePosition (const QGeoPositionInfo & position)
 {
   processPosition (position);
@@ -135,7 +169,6 @@ GeoTicker::processPosition (const QGeoPositionInfo & position)
       boundingBox |= QGeoBoundingBox (coord, coord);
     }
   }
-  qDebug () << " path " << path;
   qDebug () << " bb size " << boundingBox.width() 
             << " x " << boundingBox.height();
 }
@@ -208,10 +241,50 @@ GeoTicker::writeSvgMap (QIODevice * device,
   }
   qDebug () << " bottom left " << mapBox.bottomLeft();
   qDebug () << " top right " << mapBox.topRight();
-  minLat = mapBox.bottomLeft().latitude();
-  rangeLat = mapBox.topRight().latitude() - minLat;
-  minLon = mapBox.bottomLeft().longitude();
-  rangeLon = mapBox.topRight().longitude() - minLon;
+  QGeoCoordinate botLeft = mapBox.bottomLeft();
+  QGeoCoordinate topRight = mapBox.topRight();
+  minLat = botLeft.latitude();
+  qreal maxLat = topRight.latitude();
+  minLon = botLeft.longitude();
+  qreal maxLon = topRight.longitude();
+
+  rangeLat = maxLat - minLat;
+  rangeLon = maxLon - minLon, rangeLon;
+  if (rangeLat > rangeLon) {
+    rangeLon = rangeLat;
+  } else {
+    rangeLat = rangeLon;
+  }
+  qreal boxHeight = botLeft.distanceTo (QGeoCoordinate (
+                                          topRight.latitude(),
+                                          minLon));  
+  latScale = 1.0;
+  lonScale = 1.0;
+  #if 0
+  qreal boxWidth (0);
+  if (minLat > 0.0) {
+    // all points in northern hemisphere - widest at bottom
+    boxWidth = botLeft.distanceTo (QGeoCoordinate (minLat, maxLon));
+  } else if (maxLat < 0.0) {
+    // all points in southern hemisphere - widest at top
+    boxWidth = topRight.distanceTo (QGeoCoordinate (maxLat, minLon));
+  } else {
+    // bottom in south, top in north hemisphere - widest at equator
+    boxWidth = QGeoCoordinate (0,minLon).distanceTo
+                    (QGeoCoordinate (0,maxLon));
+  }    
+
+  if (boxWidth < 1.0) { boxWidth = 1.0; }   // meters
+  if (boxHeight < 1.0) { boxHeight = 1.0; } // meters
+  // this scaling is wrong
+  if (boxWidth > boxHeight) {
+    // make width (longitude) differences look bigger than they are
+    lonScale *= boxWidth/boxHeight;
+  } else if (boxWidth < boxHeight) {
+    // make height (latitude) differences look bigger than they are
+    latScale *= boxHeight/boxWidth;
+  }
+  #endif
   device->write (
     "<rect x=\"0\" y=\"0\" width=\"1000\" height=\"1000\" "
     "style=\"fill:black;stroke:green;stroke-width:1\" "
@@ -222,17 +295,22 @@ GeoTicker::writeSvgMap (QIODevice * device,
     "/>\n").arg(mappedLon(mapBox.center().longitude()))
            .arg(mappedLat(mapBox.center().latitude()))
       .toAscii());
+  
+  qreal dist (0.0);
   if (!path.isEmpty()) {
     QString pathString;
     for (int i=0; i<path.count(); i++) {
-      qDebug () << " path element " << i << mapPath.at(i);
+      if (i > 1) {
+        dist += mapPath.at(i).distanceTo (mapPath.at(i-1));
+      }
+      qDebug () << " path element " << i << mapPath.at(i) << " dist " << dist;
       pathString += QString (" %1,%2 ")
                    .arg (mappedLon (mapPath.at(i).longitude()))
                    .arg (mappedLat (mapPath.at(i).latitude()));
     }
     device->write (QString (
       "<polyline \n"
-      "  style=\"fill:none; stroke:green; stroke-width:1\" \n"
+      "  style=\"fill:none; stroke:green; stroke-width:2\" \n"
       "  points=\"%1\"\n"
       "/>\n")  
         .arg (pathString)
@@ -244,18 +322,18 @@ int
 GeoTicker::mappedLon (qreal rawLon)
 {
   if (rangeLon < 0.00001) {
-    return 0;
+    return 1;
   }
-  return qRound (1000.0 * (rawLon - minLon) / rangeLon);
+  return qRound (1000.0 * lonScale * (rawLon - minLon) / rangeLon);
 }
 
 int
 GeoTicker::mappedLat (qreal rawLat)
 {
   if (rangeLat < 0.00001) {
-    return 0;
+    return 1;
   }
-  return 1000 - qRound (1000.0 * (rawLat - minLat) / rangeLat);
+  return 1000 - qRound (1000.0 * latScale * (rawLat - minLat) / rangeLat);
 }
 
 

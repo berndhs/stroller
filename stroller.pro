@@ -30,6 +30,7 @@ OTHER_FILES += \
 SOURCES += \
     src/main.cpp \
     src/geo-ticker.cpp \
+    src/geo-test-source.cpp \
     src/orientation.cpp
 
 RESOURCES += \
@@ -42,6 +43,7 @@ unix:!symbian:!maemo5 {
 
 HEADERS += \
     include/geo-ticker.h \
+    include/geo-test-source.h \
     include/orientation.h
 
 unix:!symbian:!maemo5 {
