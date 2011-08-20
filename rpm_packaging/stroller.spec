@@ -21,8 +21,6 @@ make INSTALL_ROOT=%{buildroot} install
 %endif
 # << macros
 
-# << macros
-
 Name:       stroller
 Summary:    A GPS Tracker
 Version:    0.0.2
@@ -30,11 +28,10 @@ Release:    1
 Group:      Applications/Productivity
 License:    GPLv2+
 URL:        https://github.com/berndhs/stroller
-Source0:    stroller-%{version}.tar.gz
+Source0:    stroller-%{version}.tar.bz2
 Source100:  stroller.yaml
 BuildRequires:  pkgconfig(QtGui)
 BuildRequires:  pkgconfig(QtDeclarative)
-BuildRequires:  pkgconfig(QtMobility)
 
 
 %description
