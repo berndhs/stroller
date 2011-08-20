@@ -32,6 +32,9 @@ Source0:    stroller-%{version}.tar.bz2
 Source100:  stroller.yaml
 BuildRequires:  pkgconfig(QtGui)
 BuildRequires:  pkgconfig(QtDeclarative)
+BuildRequires:  pkgconfig(QtSensors)
+BuildRequires:  pkgconfig(QtLocation)
+BuildRequires:  pkgconfig(QtSystemInfo)
 BuildRequires:  desktop-file-utils
 
 

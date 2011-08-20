@@ -13,6 +13,9 @@ Description: |
 PkgConfigBR:
     - QtGui
     - QtDeclarative
+    - QtSensors
+    - QtLocation
+    - QtSystemInfo
 Configure: none
 Builder: qmake
 NoDesktop: False
