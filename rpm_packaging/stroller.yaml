@@ -1,0 +1,19 @@
+
+Name: stroller
+Summary: A GPS Tracker
+Version: 0.0.2
+Release: 1
+Group: Applications/Productivity
+License: GPLv2+
+URL: https://github.com/berndhs/stroller
+Sources:
+    - stroller-%{version}.tar.gz
+Description: |
+    A simple GPS tracker showing where the user/device has been 
+PkgConfigBR:
+    - QtGui
+    - QtDeclarative
+    - QtMobility
+Configure: none
+Builder: qmake
+NoDesktop: False
