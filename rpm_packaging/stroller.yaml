@@ -19,3 +19,4 @@ NoDesktop: False
 Files:
    - "/opt/stroller/bin/stroller"
    - "/usr/share/icons/hicolor/64x64/apps/stroller.png"
+   - "/usr/share/applications/stroller.desktop"

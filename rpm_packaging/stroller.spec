@@ -6,7 +6,7 @@
 %if X%{_vendor} == "Xmeego"
 %define my_buildhost "meego"
 %else
-%define my_exec_dir "/usr/bin"
+%define my_exec_dir "/opt/%{name}/bin"
 %if X%{_vendor} == "Xredhat"
 %define qmake qmake-qt4 \
 make
@@ -32,6 +32,7 @@ Source0:    stroller-%{version}.tar.bz2
 Source100:  stroller.yaml
 BuildRequires:  pkgconfig(QtGui)
 BuildRequires:  pkgconfig(QtDeclarative)
+BuildRequires:  desktop-file-utils
 
 
 %description
@@ -63,8 +64,12 @@ rm -rf %{buildroot}
 %qmake_install
 
 # >> install post
-ln -svf %{buildroot}/opt/stroller/bin/stroller %{buildroot}/usr/bin/stroller
+#mkdir -p %{buildroot}/usr/bin
+#ln -svf %{buildroot}/opt/stroller/bin/stroller %{buildroot}/usr/bin/stroller
 # << install post
+desktop-file-install --delete-original       \
+  --dir %{buildroot}%{_datadir}/applications             \
+   %{buildroot}%{_datadir}/applications/*.desktop
 
 
 
@@ -75,6 +80,7 @@ ln -svf %{buildroot}/opt/stroller/bin/stroller %{buildroot}/usr/bin/stroller
 %defattr(-,root,root,-)
 /opt/stroller/bin/stroller
 /usr/share/icons/hicolor/64x64/apps/stroller.png
+/usr/share/applications/stroller.desktop
 # >> files
 # << files
 
