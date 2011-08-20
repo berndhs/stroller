@@ -16,3 +16,6 @@ PkgConfigBR:
 Configure: none
 Builder: qmake
 NoDesktop: False
+Files:
+   - "/opt/stroller/bin/stroller"
+   - "/usr/share/icons/hicolor/64x64/apps/stroller.png"
