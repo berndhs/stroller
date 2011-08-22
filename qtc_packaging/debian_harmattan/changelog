@@ -1,11 +1,18 @@
-stroller (0.0.2) unstable; urgency=low
+stroller (0.0.3) unstable; urgency=low
+
+  * display cumulative distance travelled
+  * better device orientation handling
+
+ -- Bernd Stramm <bernd.stramm@gmail.com>  Mon, 22 Aug 2011 12:00:00 -0400
+ 
+stroller (0.0.3) unstable; urgency=low
 
   * Command line options
   * map scaling according to path history
 
  -- Bernd Stramm <bernd@unknown>  Wed, 17 Aug 2011 07:06:31 -0400
 
-stroller (0.0.2) unstable; urgency=low
+stroller (0.0.3) unstable; urgency=low
 
   * Initial Release.
 
