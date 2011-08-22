@@ -22,6 +22,7 @@ GeoTicker::GeoTicker (QObject *parent)
    isFirstPosition (true),
    boundingBox (QGeoCoordinate (0,0,0),359.9999,179.9999),
    currentMapFile (0),
+   totalDist (0.0),
    mapWidth (100.0),
    mapHeight (100.0)
 {
@@ -211,11 +212,12 @@ GeoTicker::updateMap ()
   }
   currentMapFile = newMap;
   currentMapFile->close();
+  qDebug () << " emit distance " << totalDist;
+  emit travelled (totalDist);
   emit mapUpdate (QString ("file://") + wholeName);
   currentMapFile->open ();
   QByteArray bytes = currentMapFile->readAll();
   qDebug () << "temp file " << wholeName;
-  qDebug () << bytes;
   currentMapFile->close ();
 }
 
@@ -349,6 +351,7 @@ GeoTicker::writeSvgMap (QIODevice * device,
       pathString += element;
       qDebug () << " path element " << i << mapPath.at(i) << element << " dist " << dist;
     }
+    totalDist = dist;
     device->write (QString (
       "<polyline \n"
       "  style=\"fill:none; stroke:green; stroke-width:2\" \n"

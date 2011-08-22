@@ -66,6 +66,7 @@ OrientationWatcher::changeHappened ()
     qreal degrees (0);
     bool  portrait (true);
     bool  doSignal (false);
+    bool  inverted (false);
     switch (nextSetting) {
     case QOrientationReading::TopUp:
       degrees = -90.0;
@@ -75,6 +76,7 @@ OrientationWatcher::changeHappened ()
     case QOrientationReading::TopDown:
       degrees = 90;
       lastSetting = nextSetting;
+      inverted = true;
       doSignal = true;
       break;
     case QOrientationReading::LeftUp:
@@ -82,6 +84,7 @@ OrientationWatcher::changeHappened ()
       lastSetting = nextSetting;
       doSignal = true;
       portrait = false;
+      inverted = true;
       break;
     case QOrientationReading::RightUp:
       degrees = 0;
@@ -93,7 +96,7 @@ OrientationWatcher::changeHappened ()
       break;
     }
     if (doSignal) {
-      emit rotationChange (portrait, degrees);
+      emit rotationChange (degrees, portrait, inverted);
     }
   }
 }

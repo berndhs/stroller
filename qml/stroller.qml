@@ -5,9 +5,11 @@ import moui.geuzen.utils.static 1.0
 Rectangle {
   id: mainBox
   color:  "transparent"
+  x: isPortrait ? (isInverted ? (width - height) * 0.5 : (height - width) * 0.5) : 0
   property int rowHeight: (isProbablyPhone ? 64 : 42)
   property bool bigLetters: isProbablyPhone
-  property bool isPortrait: false //isProbablyPhone
+  property bool isPortrait: false 
+  property bool isInverted: false
   property real mainWidth: isPortrait ? height : width
   property real mainHeight: isPortrait ? width : height
   rotation: 0
@@ -23,7 +25,9 @@ Rectangle {
     }
     onMapUpdate: {
       mapImage.source = fileName
-      console.log ("XXXXXXXXXXXXXX new map " + mapImage.source)
+    }
+    onTravelled: {
+      currentDisplay.distCovered = totalDistance*0.001
     }
   }
   GeuzenOrientation {
@@ -31,6 +35,7 @@ Rectangle {
     onRotationChange: {
       mainBox.isPortrait = portrait
       mainBox.rotation = rotation
+      mainBox.isInverted = inverted
       console.log ("new orientation port " + mainBox.isPortrait)
       console.log ("main box x " + mainBox.x + " y " + mainBox.y)
       console.log (" display locations " + currentDisplay.x + " , " + currentDisplay.y)
@@ -106,6 +111,7 @@ Rectangle {
     property real groundSpeed: 0.0
     property real heading: 0.0
     property real climbRate: 0.0
+    property real distCovered: 0.0
     width: mainWidth
     height: textDisplay.height
     color: "#e0f0f7"
@@ -121,7 +127,7 @@ Rectangle {
         left: currentDisplay.left
       }
       width: currentDisplay.width
-      wrapMode: Text.WrapAnywhere
+      wrapMode: Text.Wrap
       font.pointSize: bigLetters ? 24 : 16
       color:"red"
       text: "Lat/Lon " + currentDisplay.posLat.toFixed (3) +
@@ -129,7 +135,8 @@ Rectangle {
             "\nV " + currentDisplay.groundSpeed.toPrecision(3) + " m/s " +
             " hdg " + currentDisplay.heading.toFixed (1) + " deg" +
             "\nAltitude " + currentDisplay.posAlt.toPrecision(3) +
-            " climb    " + currentDisplay.climbRate.toPrecision(3) + " m/s"
+            " climb    " + currentDisplay.climbRate.toPrecision(3) + " m/s" +
+            " travelled " + currentDisplay.distCovered.toFixed(3) + " km"
     }
   }
   Rectangle {

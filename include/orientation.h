@@ -44,7 +44,7 @@ signals:
   /** !brief  0 - right edge up,  180 - left edge up
             +90 - bottom edge up  -90 - top edge up
    */
-  void rotationChange (bool portrait, qreal rotation);
+  void rotationChange ( qreal rotation, bool portrait,bool inverted);
 
 private slots:
 

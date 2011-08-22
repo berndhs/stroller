@@ -48,6 +48,7 @@ signals:
 
   void positionUpdate (qreal posLat, qreal posLon, qreal posAlt,
                        qreal velHorizontal, qreal heading, qreal velVertical);
+  void travelled (qreal totalDistance);
   void mapUpdate (const QString & fileName);
 
 private:
@@ -72,6 +73,8 @@ private:
   QGeoPositionInfo         lastReport;
   QList <QGeoCoordinate>   path;
   QTemporaryFile          *currentMapFile;
+  
+  qreal   totalDist;
 
   qreal   minLat;
   qreal   rangeLat;
